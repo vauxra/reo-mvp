@@ -13,3 +13,7 @@ output "github_actions_client_id" {
 output "github_actions_principal_id" {
   value = azurerm_user_assigned_identity.github_actions.principal_id
 }
+
+output "reo_workbook_id" {
+  value = azurerm_application_insights_workbook.reo_runs.id
+}

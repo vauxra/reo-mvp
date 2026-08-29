@@ -62,6 +62,19 @@ LogMessage: REO_AUDIT_MARKER=one-off
 
 Both platform and cluster Terraform plans now report no changes.
 
+## Workbook
+
+Terraform deployed **REO Run Operations** as `azurerm_application_insights_workbook.reo_runs`. It shows latest run state, `REO_HEARTBEAT` lines, pending/running pods older than 45 seconds, and raw execution logs. The workbook's heartbeat query was verified with `reo-one-off-hello-58j8s`:
+
+```text
+TimeGenerated: 2026-08-29T17:00:56.6711897Z
+PodName: reo-one-off-hello-58j8s
+ContainerName: main
+LogMessage: REO_HEARTBEAT=one-off
+```
+
+Read `docs/ops/reo-workbook.md` for the portal location and redeploy instructions.
+
 ## Cleanup
 
 ```bash

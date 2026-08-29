@@ -72,3 +72,15 @@ def test_mvp_has_local_account_and_job_resource_guardrails():
     assert 'resource "kubernetes_config_map_v1" "container_log_collection"' in cluster
     assert 'name      = "container-azm-ms-agentconfig"' in cluster
     assert 'containerlog_schema_version = "v2"' in cluster
+    assert "REO_HEARTBEAT" in one_off
+    assert "REO_HEARTBEAT" in cron
+
+
+def test_reo_workbook_iac_covers_runs_heartbeats_and_long_running_workloads():
+    config = terraform_config()
+
+    assert 'resource "azurerm_application_insights_workbook" "reo_runs"' in config
+    assert "REO Run Operations" in config
+    assert "REO_HEARTBEAT" in config
+    assert "ContainerLogV2" in config
+    assert 'PodStatus in~ ("Running", "Pending")' in config

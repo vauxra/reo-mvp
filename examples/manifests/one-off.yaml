@@ -22,4 +22,5 @@ spec:
             import json
             import platform
             print(json.dumps({"event": "reo_hello", "message": "REO Python one-off passed", "python": platform.python_version()}))
+            print("REO_HEARTBEAT=one-off")
             print("REO_AUDIT_MARKER=one-off")

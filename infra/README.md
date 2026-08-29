@@ -18,7 +18,7 @@ terraform validate
 terraform plan
 ```
 
-Platform creates one small fixed AKS node, Log Analytics, an AKS admin group, and GitHub Actions OIDC identity.
+Platform creates one small fixed AKS node, Log Analytics, the **REO Run Operations** workbook, an AKS admin group, and GitHub Actions OIDC identity. The workbook is defined in `workbook.tf` and can be redeployed with the platform stack.
 
 ## 2. Cluster add-ons
 

@@ -28,4 +28,5 @@ spec:
               import json
               import platform
               print(json.dumps({"event": "reo_hello", "message": "REO Python cron passed", "python": platform.python_version()}))
+              print("REO_HEARTBEAT=cron")
               print("REO_AUDIT_MARKER=cron")

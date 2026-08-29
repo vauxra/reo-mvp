@@ -8,7 +8,7 @@ This MVP is intentionally disposable.
 az group delete --name reo-mvp --yes --no-wait
 ```
 
-This deletes the AKS cluster, node VM, VNet, Log Analytics workspace, managed identity, and REO Entra role assignment. It does not delete the Microsoft Entra security group created for AKS admins.
+This deletes the AKS cluster, node VM, VNet, Log Analytics workspace, **REO Run Operations workbook**, managed identity, and REO Entra role assignment. It does not delete the Microsoft Entra security group created for AKS admins.
 
 ## Delete the Entra test group
 
