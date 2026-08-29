@@ -1,0 +1,11 @@
+subscription_id           = "c6c9546a-a832-4543-9f6d-0e16d480936b"
+resource_group_name       = "reo-mvp"
+location                  = "eastus2"
+name_prefix               = "reo-mvp"
+github_owner              = "vauxra"
+github_repository         = "reo-mvp"
+
+# Cost baseline:
+aks_node_size                 = "Standard_D2s_v3"
+aks_node_count                = 1
+log_analytics_daily_quota_gb  = 0.5

@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: CronWorkflow
+metadata:
+  name: reo-cron-hello
+  namespace: reo-runs
+  labels:
+    reo.io/example: cron
+spec:
+  schedules: ["0 2 * * *"]
+  timezone: "Etc/UTC"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  workflowSpec:
+    activeDeadlineSeconds: 60
+    automountServiceAccountToken: false
+    serviceAccountName: reo-workflow
+    executor:
+      serviceAccountName: reo-executor
+    entrypoint: hello
+    templates:
+      - name: hello
+        container:
+          image: python@sha256:42825e7ec3437b3bce923c237484eb23d32128476e18307d2f48951bf86f1db2
+          command: [python, -c]
+          args:
+            - |
+              import json
+              import platform
+              print(json.dumps({"event": "reo_hello", "message": "REO Python cron passed", "python": platform.python_version()}))
+              print("REO_AUDIT_MARKER=cron")

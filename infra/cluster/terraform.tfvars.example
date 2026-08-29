@@ -1,0 +1,4 @@
+subscription_id             = "c6c9546a-a832-4543-9f6d-0e16d480936b"
+resource_group_name         = "reo-mvp"
+aks_name                    = "reo-mvp-aks"
+github_actions_principal_id = "from: terraform -chdir=.. output -raw github_actions_principal_id"

@@ -1,0 +1,13 @@
+# REO job declarations
+# GitHub Actions submits only the listed reviewed manifests on main.
+
+jobs:
+  one-off-hello:
+    trigger: main-push
+    manifest: examples/manifests/one-off.yaml
+    timeout: 60s
+
+  cron-hello:
+    trigger: cron
+    manifest: examples/manifests/cron.yaml
+    timeout: 60s

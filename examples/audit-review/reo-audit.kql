@@ -1,0 +1,9 @@
+// REO one-off and cron audit review.
+// Run in the REO Log Analytics workspace.
+
+ContainerLogV2
+| where TimeGenerated > ago(24h)
+| where PodNamespace == "reo-runs"
+| where PodName startswith "reo-"
+| project TimeGenerated, PodName, ContainerName, LogMessage, LogSource
+| order by TimeGenerated desc
