@@ -47,11 +47,20 @@ YAML manifests: parsed
 
 ## GitHub OIDC verification
 
-The initial `main` push run (`33263459776`) failed before Kubernetes submission because this GitHub account emits an ID-qualified OIDC `sub`, while the first Entra federation used the legacy name-only form. Terraform has updated the Entra federation to the exact ID-qualified `main` subject. Push the pending correction commit to trigger and verify the end-to-end GitHub path.
+GitHub Actions run `33263732711` completed successfully after Terraform updated the Entra federation to the exact ID-qualified `main` subject. The run checked out `main`, obtained a short-lived Azure OIDC token, acquired restricted AKS credentials, and submitted the REO examples.
 
-## Audit log status
+## Audit log verification
 
-Container Insights inventory and metrics are present in Log Analytics. `ContainerLogV2` remains empty, so KQL workload-log confirmation is pending container-log collection configuration. Do not declare the audit path complete until `REO_AUDIT_MARKER` appears in `ContainerLogV2`.
+The Azure Monitor agent is Terraform-managed through `container-azm-ms-agentconfig`: stdout/stderr from non-system namespaces is collected as `ContainerLogV2`; environment-variable collection is disabled. After the rolling agent restart and a new REO workflow, Log Analytics returned:
+
+```text
+TimeGenerated: 2026-08-29T16:45:45.5372674Z
+PodName: reo-one-off-hello-zs5dh
+ContainerName: main
+LogMessage: REO_AUDIT_MARKER=one-off
+```
+
+Both platform and cluster Terraform plans now report no changes.
 
 ## Cleanup
 

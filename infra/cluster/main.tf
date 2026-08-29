@@ -24,6 +24,33 @@ resource "kubernetes_namespace_v1" "reo_runs" {
   }
 }
 
+resource "kubernetes_config_map_v1" "container_log_collection" {
+  metadata {
+    name      = "container-azm-ms-agentconfig"
+    namespace = "kube-system"
+  }
+
+  data = {
+    "schema-version"               = "v1"
+    "config-version"               = "reo1"
+    "log-data-collection-settings" = <<-EOT
+      [log_collection_settings]
+        [log_collection_settings.stdout]
+          enabled = true
+          exclude_namespaces = ["kube-system", "gatekeeper-system"]
+        [log_collection_settings.stderr]
+          enabled = true
+          exclude_namespaces = ["kube-system", "gatekeeper-system"]
+        [log_collection_settings.env_var]
+          enabled = false
+        [log_collection_settings.enrich_container_logs]
+          enabled = true
+        [log_collection_settings.schema]
+          containerlog_schema_version = "v2"
+    EOT
+  }
+}
+
 resource "kubernetes_service_account_v1" "reo_workflow" {
   metadata {
     name      = "reo-workflow"

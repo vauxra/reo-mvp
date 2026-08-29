@@ -59,6 +59,7 @@ def test_mvp_has_local_account_and_job_resource_guardrails():
     cron = Path("examples/manifests/cron.yaml").read_text()
 
     assert re.search(r"local_account_disabled\s*=\s*true", platform)
+    assert "upgrade_settings" in platform
     assert 'resource "kubernetes_resource_quota_v1" "reo_runs"' in cluster
     assert 'resource "kubernetes_limit_range_v1" "reo_runs"' in cluster
     assert "automountServiceAccountToken: false" in one_off
@@ -68,3 +69,6 @@ def test_mvp_has_local_account_and_job_resource_guardrails():
     assert "schedules:" in cron
     assert 'resource "kubernetes_service_account_v1" "reo_executor"' in cluster
     assert 'resource "kubernetes_secret_v1" "reo_executor_token"' in cluster
+    assert 'resource "kubernetes_config_map_v1" "container_log_collection"' in cluster
+    assert 'name      = "container-azm-ms-agentconfig"' in cluster
+    assert 'containerlog_schema_version = "v2"' in cluster

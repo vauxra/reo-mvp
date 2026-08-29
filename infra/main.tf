@@ -50,6 +50,12 @@ resource "azurerm_kubernetes_cluster" "reo" {
     node_count           = var.aks_node_count
     auto_scaling_enabled = false
     vnet_subnet_id       = azurerm_subnet.aks.id
+
+    upgrade_settings {
+      max_surge                     = "10%"
+      drain_timeout_in_minutes      = 0
+      node_soak_duration_in_minutes = 0
+    }
   }
 
   identity {
