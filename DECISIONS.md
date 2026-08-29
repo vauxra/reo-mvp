@@ -22,7 +22,7 @@ REO = Relic Execution Orchestrator.
 ## Auth boundary
 
 - No GitHub App, PAT, webhook, DNS, or TLS needed for this test.
-- Entra federation trusts only `repo:vauxra/reo-mvp:ref:refs/heads/main`.
+- Entra federation trusts only the GitHub Actions subject emitted for this repository and `main`: `repo:vauxra@63472938/reo-mvp@1350685372:ref:refs/heads/main`.
 - GitHub identity has AKS Cluster User access.
 - Kubernetes RoleBinding limits it to Argo `Workflow`/`CronWorkflow` API resources in `reo-runs`.
 - Owner-only `main` is the accepted test trust boundary; formal GitHub branch/action policies are deferred.

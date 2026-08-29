@@ -26,6 +26,10 @@ def test_terraform_uses_github_oidc_not_webhooks_or_github_tokens():
     config = terraform_config()
     assert "github-actions" in config
     assert "https://token.actions.githubusercontent.com" in config
+    assert re.search(
+        r'subject\s*=\s*"repo:\$\{var\.github_owner\}@\$\{var\.github_owner_id\}/\$\{var\.github_repository\}@\$\{var\.github_repository_id\}:ref:refs/heads/main"',
+        config,
+    )
     assert "github_repository_webhook" not in config
     assert "github_token" not in config
     assert "azure_rbac_enabled" not in config or re.search(r"azure_rbac_enabled\s*=\s*false", config)

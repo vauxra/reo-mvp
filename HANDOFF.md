@@ -1,99 +1,60 @@
 # REO handoff
 
-## Azure verified
+## Deployed Azure state
 
 ```text
 Subscription: c6c9546a-a832-4543-9f6d-0e16d480936b
-Resource group: reo-mvp
-Location: resource group remains centralus; REO resources are recreated in eastus2 using Standard_D2s_v3 because Central US DSv5 quota is zero.
-State: Succeeded
+Resource group: reo-mvp (metadata location centralus)
+REO regional resources: eastus2
+AKS: reo-mvp-aks
+Node: one Standard_D2s_v3 node; autoscaling disabled
+AKS local accounts: disabled
+Argo Server: disabled; no public endpoint
 ```
 
-## Tools
-
-Record: `docs/ops/tooling-state.md`
-
-Installed for REO:
+## Security boundary
 
 ```text
-Terraform 1.16.0
-kubectl 1.37.0
-kubelogin 0.2.19
-Helm 4.2.4
+GitHub Actions OIDC -> Entra user-assigned identity -> AKS Cluster User
+GitHub subject: repo:vauxra@63472938/reo-mvp@1350685372:ref:refs/heads/main
+Kubernetes submitter: Workflow/CronWorkflow only, namespace reo-runs
+Workload service account: no token automount
+Argo executor: separate token with workflowtaskresults create/patch only
 ```
 
-## Built
+## Verified runtime evidence
 
 ```text
-infra/                 Azure/Entra/AKS platform Terraform
-infra/cluster/         Argo + Kubernetes RBAC Terraform
-.github/workflows/     GitHub Actions OIDC submitter
-examples/manifests/    one-off and cron Argo examples
-examples/audit-review/ Log Analytics KQL review
-reo.yaml               repo job declaration
+one-off workflow: Succeeded
+REO Python one-off passed
+REO_AUDIT_MARKER=one-off
+
+cron child workflow: Succeeded
+REO Python cron passed
+REO_AUDIT_MARKER=cron
+
+cron schedule restored: 0 2 * * * UTC
 ```
 
-## Test lane
+## Validation
 
 ```text
-main push
--> GitHub Actions
--> GitHub OIDC Azure token
--> restricted AKS identity
--> Argo Workflow/CronWorkflow in reo-runs
--> 60-second pod cap
--> Log Analytics
+terraform -chdir=infra validate: passed
+terraform -chdir=infra/cluster validate: passed
+python3 -m pytest tests -q: 6 passed
+YAML manifests: parsed
 ```
 
-No public endpoint. No GitHub secret. No GitHub App.
+## GitHub OIDC verification
 
-## Verified
+The initial `main` push run (`33263459776`) failed before Kubernetes submission because this GitHub account emits an ID-qualified OIDC `sub`, while the first Entra federation used the legacy name-only form. Terraform has updated the Entra federation to the exact ID-qualified `main` subject. Push the pending correction commit to trigger and verify the end-to-end GitHub path.
 
-```text
-terraform -chdir=infra validate
-passed
+## Audit log status
 
-terraform -chdir=infra/cluster validate
-passed
+Container Insights inventory and metrics are present in Log Analytics. `ContainerLogV2` remains empty, so KQL workload-log confirmation is pending container-log collection configuration. Do not declare the audit path complete until `REO_AUDIT_MARKER` appears in `ContainerLogV2`.
 
-pytest
-10 passed
+## Cleanup
 
-YAML manifests
-parsed
+```bash
+az group delete --name reo-mvp --yes --no-wait
 ```
-
-## Platform plan
-
-Platform plan is regenerated before apply. Expected scope is nine new resources:
-
-```text
-Entra AKS admin group + current-user membership
-Log Analytics workspace
-VNet + subnet
-AKS (one fixed D2s_v5 node)
-GitHub Actions managed identity + OIDC federation
-AKS Cluster User role assignment
-```
-
-No resource has been created by this session.
-
-## Security gate before apply
-
-Read: `docs/security/public-test-security-gate.md`
-
-Accepted test boundary: only the owner can push `main`; formal GitHub branch/action policies are deferred.
-
-Keep three zero/low-cost controls before apply: disable AKS local accounts, enforce `reo-runs` pod quotas, and disable job service-account token automount.
-
-Those controls are now implemented and validated. Regenerate the platform plan before apply.
-
-## Next
-
-1. Regenerate and review platform plan.
-2. Apply platform only.
-3. Wait for Entra group membership propagation.
-4. Plan/apply `infra/cluster`.
-5. Set three GitHub Actions variables from `docs/ops/github-oidc-test.md`.
-6. Commit/push test files, then run one-off and cron baseline.
-7. Run KQL audit review.

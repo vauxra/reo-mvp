@@ -4,6 +4,8 @@ location                  = "eastus2"
 name_prefix               = "reo-mvp"
 github_owner              = "vauxra"
 github_repository         = "reo-mvp"
+github_owner_id           = "63472938"
+github_repository_id      = "1350685372"
 
 # Cost baseline:
 aks_node_size                 = "Standard_D2s_v3"

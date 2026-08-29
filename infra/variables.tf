@@ -4,6 +4,8 @@ variable "location" { type = string }
 variable "name_prefix" { type = string }
 variable "github_owner" { type = string }
 variable "github_repository" { type = string }
+variable "github_owner_id" { type = string }
+variable "github_repository_id" { type = string }
 variable "vnet_cidr" {
   type    = string
   default = "10.42.0.0/16"
