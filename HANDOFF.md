@@ -47,15 +47,15 @@ YAML manifests: parsed
 
 ## GitHub OIDC verification
 
-GitHub Actions run `33263732711` completed successfully after Terraform updated the Entra federation to the exact ID-qualified `main` subject. The run checked out `main`, obtained a short-lived Azure OIDC token, acquired restricted AKS credentials, and submitted the REO examples.
+GitHub Actions run `33264073848` completed successfully on commit `7593866`. It checked out `main`, obtained a short-lived Azure OIDC token, acquired restricted AKS credentials, and submitted the REO examples.
 
 ## Audit log verification
 
 The Azure Monitor agent is Terraform-managed through `container-azm-ms-agentconfig`: stdout/stderr from non-system namespaces is collected as `ContainerLogV2`; environment-variable collection is disabled. After the rolling agent restart and a new REO workflow, Log Analytics returned:
 
 ```text
-TimeGenerated: 2026-08-29T16:45:45.5372674Z
-PodName: reo-one-off-hello-zs5dh
+TimeGenerated: 2026-08-29T16:51:36.0993055Z
+PodName: reo-one-off-hello-wgdwr
 ContainerName: main
 LogMessage: REO_AUDIT_MARKER=one-off
 ```
